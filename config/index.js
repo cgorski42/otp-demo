@@ -14,6 +14,14 @@ module.exports = {
           '/authenticate': {
         target: 'http://localhost:3000',
         secure: false
+      },
+      '/verify-totp': {
+        target: 'http://localhost:3000',
+        secure: false
+      },
+      '/protected': {
+        target: 'http://localhost:3000',
+        secure: false
       }
     },
     // Various Dev Server settings

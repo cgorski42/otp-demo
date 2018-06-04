@@ -57,6 +57,9 @@ export default new Vuex.Store({
         /*axios.post("/api/phoneNumber",user).then(response => {
       context.commit('setUser', response.data.user);*/
       context.commit('setLogin',true);
+      axios.get("/authenticate").then((response)=>{
+        console.log(response);
+      })
       /*context.commit('setPhoneError',"");
       context.commit('setLoginError',"");
         }).catch(error => {
