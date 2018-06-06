@@ -26,6 +26,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'));
 
+
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! make function to generate OTP
+app.get("/generate-secret", function(request, response) {
+    response.send({ "secret": TwoFactor.generateSecret() });
+});
+
+app.post("/generate-otp", function(request, response) {
+    response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
+});
+*/
+
 var getBearerToken = function(header, callback) {
     if(header) {
         token = header.split(" ");
@@ -38,7 +49,8 @@ var getBearerToken = function(header, callback) {
         return callback("Missing authorization header", null);
     }
 }
-
+//middleware funtion that either validates our token and progresses us into the endpoint or 
+//return an error on our behalf. 
 var validateToken = function(request, response, next) {
     getBearerToken(request.headers["authorization"], function(error, token) {
         if(error) {
@@ -57,8 +69,19 @@ var validateToken = function(request, response, next) {
         });
     });
 };
-//login
+/*The validateToken function above does a few things. First, we expect that the token is passed 
+around as a Bearer token in an authorization header. If the header exists, we split the
+ token and use the second half. Using the JWT secret we can verify the token to see if it is legit
+ and the user is truly authorized to access the API. If the token is valid, we can add it to the 
+ request and progress from the middleware to our protected endpoint. At this point the protected 
+ endpoint will have access to the decoded value set in the middleware. This middleware can be used
+ on every protected endpoint.*/
+
+
+/*login (trades auth data for JSON Web Token) assumes database data has a boolean element 2fa that 
+indicates if 2fa is enabled or not (probably uneccasary for our purposes wil defalut to on.)*/
 app.post("/authenticate", function(request, response) {
+   //static databaseless user info
     var user = {
         "username": "user",
         "password": "password",
@@ -69,6 +92,7 @@ app.post("/authenticate", function(request, response) {
     } else if(!request.body.password) {
         return response.status(401).send({ "success": false, "message": "A `password` is required"});
     }
+    //bcrypt password hash for protection
     Bcrypt.compare(request.body.password, user.password, function(error, result) {
         if(error || !result) {
             return response.status(401).send({ "success": false, "message": "Invalid username and password" });
@@ -77,7 +101,7 @@ app.post("/authenticate", function(request, response) {
         response.send({ "token": token, "2fa": user["2fa"] });
     });
 });
-
+//atuhenticates token, assumes mock user and mock data including a otp (totp) secret. 
 app.post("/verify-totp", function(request, response) {
     var user = {
         "username": "user",
@@ -93,6 +117,7 @@ app.post("/verify-totp", function(request, response) {
         }
         JsonWebToken.verify(token, app.get("jwt-secret"), function(error, decodedToken) {
             if(TwoFactor.verifyToken(user.totpsecret, request.body.otp)) {
+                //verifies otp and updates authorized
                 decodedToken.authorized = true;
                 var token = JsonWebToken.sign(decodedToken, app.get("jwt-secret"), {});
                 return response.send({ "token": token });
@@ -103,7 +128,7 @@ app.post("/verify-totp", function(request, response) {
     });
 });
 
-
+//JWT should be used wwith every future request to a protected API endpoint
 app.get("/protected", validateToken, function(request, response) {
     response.send({ "message": "Welcome to the protected page" });
 });

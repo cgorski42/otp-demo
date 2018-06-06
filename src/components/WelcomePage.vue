@@ -15,9 +15,6 @@
 </template>
 
 
-
-
-
 <script>
 export default {
   name: 'WelcomePage',
@@ -47,8 +44,6 @@ export default {
         //TODO: place variables here
   
 </script>
-
-
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

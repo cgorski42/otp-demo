@@ -54,31 +54,19 @@ export default new Vuex.Store({
        
     //Verify Phonenumber //
        phoneVerify(context,phoneNumber) {
-        /*axios.post("/api/phoneNumber",user).then(response => {
-      context.commit('setUser', response.data.user);*/
+      //Create phone verification program to test if actual phone/email
       context.commit('setLogin',true);
+      //Create program to send a generated otp to given phone/email
       axios.get("/authenticate").then((response)=>{
         console.log(response);
       })
-      /*context.commit('setPhoneError',"");
-      context.commit('setLoginError',"");
-        }).catch(error => {
-      context.commit('setLoginError',"");
-      context.commit('setLogin',false);
-      if (error.response) {
-        if (error.response.status === 403)
-          context.commit('setPhoneError',"That email address already has an account.");
-        else if (error.response.status === 409)
-          context.commit('setphoneError',"That user name is already taken.");
-        return;
-      }
-      context.commit('setphoneError',"Sorry, your request failed. We will look into it.");
-        });*/
       },
 
       //Verify OTP
       otpVerify(context, otp){
+        //check otp against the saved otp-phone number pair
         context.commit('setOtpVerified', true);
+        
       }
 
 
