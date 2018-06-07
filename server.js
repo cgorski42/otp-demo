@@ -40,10 +40,10 @@ app.get("/generate-secret", function(request, response) {
 app.post("/generate-otp", function(request, response) {
     console.log('otp post test')
     //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
-    var otp = "";
+    var otp = "One time password";
     client.messages.create({
-        body: "Hello from Node",
-        to: otp,  // Text this number
+        body: otp
+        to: request.body.phone_number,  // Text this number
         from: process.env.TWILIO_NUMBER // From a valid Twilio number
      })
      .then((message) => console.log(message.sid));
