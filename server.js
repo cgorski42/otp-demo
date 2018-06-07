@@ -12,7 +12,11 @@ const knex = require('knex')(config);
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
+//twilio
+const accountID = process.env.TWILIO_SID || "";
+const authToken = process.env.TWILIO_TOKEN || ""; 
+const twilio = require('twilio');
+var client = new twilio(accountID, authToken)
 
 var app = express();
 app.get('/authenticate',(req, res) => {
@@ -28,14 +32,24 @@ app.use(express.static('public'));
 
 
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! make function to generate OTP
+32  character secret
 app.get("/generate-secret", function(request, response) {
     response.send({ "secret": TwoFactor.generateSecret() });
-});
-
+});*/
+//six character token
 app.post("/generate-otp", function(request, response) {
-    response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
+    console.log('otp post test')
+    //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
+    var otp = "";
+    client.messages.create({
+        body: "Hello from Node",
+        to: otp,  // Text this number
+        from: process.env.TWILIO_NUMBER // From a valid Twilio number
+     })
+     .then((message) => console.log(message.sid));
+     response.send('otp response test')
 });
-*/
+// 
 
 var getBearerToken = function(header, callback) {
     if(header) {
