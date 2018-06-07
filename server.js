@@ -39,6 +39,7 @@ app.get("/generate-secret", function(request, response) {
 //six character token
 app.post("/generate-otp", function(request, response) {
     console.log('otp post test')
+    //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
     client.messages.create({
         body: "Hello from Node",
         to: "+16303839303",  // Text this number
@@ -47,7 +48,7 @@ app.post("/generate-otp", function(request, response) {
      .then((message) => console.log(message.sid));
      response.send('otp response test')
 });
-//response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
+// 
 
 var getBearerToken = function(header, callback) {
     if(header) {
