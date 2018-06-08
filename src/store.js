@@ -31,7 +31,7 @@ export default new Vuex.Store({
           state.loginError = message;
         },
         setphoneError (state, message) {
-          state.registerError = message;
+          state.phoneError = message;
         },
         setPhoneNumber (state, phoneNumber) {
           state.phoneNumber = setphoneNumber;
@@ -54,10 +54,11 @@ export default new Vuex.Store({
        
     //Verify Phonenumber //
        phoneVerify(context,phoneNumber) {
-      //Create phone verification program to test if actual phone/email
-      context.commit('setLogin',true);
-      //Create program to send a generated otp to given phone/email
-      axios.get("/authenticate").then((response)=>{
+        axios.post("/generate-otp").then((response)=>{
+          context.commit('setPhoneNumber', response.data)
+          context.commit('setLogin',true);
+      //Create phone verification program to test if actual phone/email write error
+      //Create program to send a generated otp to given phone/email write error
         console.log(response);
       })
       },

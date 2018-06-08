@@ -44,7 +44,7 @@ app.post("/generate-otp", function(request, response) {
     var otp = "One time password";
     client.messages.create({
         body: otp,
-        to: request.body.phone_number,  // Text this number
+        to: request.body.phoneNumber,  // Text this number
         from: process.env.TWILIO_NUMBER // From a valid Twilio number
      })
      .then((message) => console.log(message.sid));
