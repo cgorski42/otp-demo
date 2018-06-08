@@ -13,8 +13,8 @@ let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 //twilio
-const accountID = "AC339fcf499a714b74878f3015c73ce29a";
-const authToken = "f44c517b947f3d67c156a117c820b85d"; 
+const accountID = process.env.TWILIO_SID || "";
+const authToken = process.env.TWILIO_TOKEN || ""; 
 const twilio = require('twilio');
 var client = new twilio(accountID, authToken)
 
@@ -40,10 +40,11 @@ app.get("/generate-secret", function(request, response) {
 app.post("/generate-otp", function(request, response) {
     console.log('otp post test')
     //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
+    var otp = "One time password";
     client.messages.create({
-        body: "Hello from Node",
-        to: "+16303839303",  // Text this number
-        from: "+19737073230" // From a valid Twilio number
+        body: otp
+        to: request.body.phone_number,  // Text this number
+        from: process.env.TWILIO_NUMBER // From a valid Twilio number
      })
      .then((message) => console.log(message.sid));
      response.send('otp response test')
