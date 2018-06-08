@@ -13,10 +13,11 @@ let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 //twilio
-const accountID = process.env.TWILIO_SID || "";
+const dotenv = require('dotenv').load();
+const accountSID = process.env.TWILIO_SID || "";
 const authToken = process.env.TWILIO_TOKEN || ""; 
 const twilio = require('twilio');
-var client = new twilio(accountID, authToken)
+var client = new twilio(accountSID, authToken)
 
 var app = express();
 app.get('/authenticate',(req, res) => {
@@ -42,7 +43,7 @@ app.post("/generate-otp", function(request, response) {
     //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
     var otp = "One time password";
     client.messages.create({
-        body: otp
+        body: otp,
         to: request.body.phone_number,  // Text this number
         from: process.env.TWILIO_NUMBER // From a valid Twilio number
      })
