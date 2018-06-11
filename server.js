@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 var JsonWebToken = require("jsonwebtoken");
-
+var TwoFactor = require('node-2fa');
 // Knex Setup
 const env = process.env.NODE_ENV || 'development';
 const config = require('./knexfile')[env];  
@@ -32,25 +32,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! make function to generate OTP
-32  character secret
+//32 char secret generator
 app.get("/generate-secret", function(request, response) {
     response.send({ "secret": TwoFactor.generateSecret() });
-});*/
+});
 //six character token
 app.post("/generate-otp", function(request, response) {
     console.log('otp post test')
-    //response.send({ "otp": TwoFactor.generateToken(request.body.secret) });
-    var otp = "One time password";
+   let otp = TwoFactor.generateToken(request.body.secret);
+   console.log(request.body.phoneNumber);
+   console.log(otp);
     client.messages.create({
-        body: otp,
+        body: otp.token,
         to: request.body.phoneNumber,  // Text this number
         from: process.env.TWILIO_NUMBER // From a valid Twilio number
      })
      .then((message) => console.log(message.sid));
-     response.send('otp response test')
+    response.send({otp});
 });
-// 
 
 var getBearerToken = function(header, callback) {
     if(header) {

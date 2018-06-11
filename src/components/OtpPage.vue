@@ -2,14 +2,12 @@
   <div class="column">
     <h1>Userless Demo</h1>
     <p> Please confirm your identity with the OTP that has been sent to your phone. </p>
-    <!--   <form v-on:submit.prevent="register"> -->
     <form>
       <input class="narrow" v-model="otp" placeholder="One Time Password (OTP)">
       <p></p>
       <button class="alternate" type="submit" v-on:click.left="otpVerify">Sign In</button>
     </form>
     <p></p>
-    <p class="error">{{registerError}}</p>
   </div>
 
 </template>
@@ -20,23 +18,15 @@ export default {
   name: 'OtpPage',
  data(){
     return {
-      phoneNumber: '',
       otp: '',
-      loggedIn: '',
     }
   },
   computed: {
-        phoneNumber: function() {
-       return this.$store.getters.phoneNumber;
-     },
      loggedIn: function() {
        return this.$store.getters.loggedIn;
      },
      loginError: function() {
        return this.$store.getters.loginError;
-     },
-     otp: function(){
-       return this.$store.getters.otp;
      },
    },
   methods: {

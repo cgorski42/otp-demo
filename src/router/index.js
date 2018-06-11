@@ -6,6 +6,7 @@ import HomePage from '@/components/HomePage'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',

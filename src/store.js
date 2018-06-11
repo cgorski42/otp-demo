@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import twoFactor from 'node-2fa';
 
 Vue.use(Vuex);
 
@@ -12,7 +13,7 @@ export default new Vuex.Store({
         phoneNumber: {},
         otp: {},
         otpVerified: false,
-        
+        secret: '',
       },
       getters: {
         loggedIn: state => state.loggedIn,
@@ -21,6 +22,7 @@ export default new Vuex.Store({
         phoneNumber: state => state.phoneNumber,
         otpVerified: state => state.otpVerified,
         otp: state => state.otp,
+        secret: state => state.secret,
       },
     
       mutations: {
@@ -34,14 +36,18 @@ export default new Vuex.Store({
           state.phoneError = message;
         },
         setPhoneNumber (state, phoneNumber) {
-          state.phoneNumber = setphoneNumber;
+          state.phoneNumber = phoneNumber;
         },
         setOtpVerified (state,status) {
           state.otpVerified = status;
         },
         setOtp (state,otp){
-          state.otp = setOtp;
+          state.otp = otp;
         },
+        setSecret (state, secret) {
+          state.secret = secret;
+        }
+
       },
     
   actions: {
@@ -54,9 +60,21 @@ export default new Vuex.Store({
        
     //Verify Phonenumber //
        phoneVerify(context,phoneNumber) {
-        axios.post("/generate-otp").then((response)=>{
-          context.commit('setPhoneNumber', response.data)
-          context.commit('setLogin',true);
+         axios.get("/generate-secret").then((response)=>{
+           console.log("afwsfjakls;df");
+          console.log(response);
+            context.commit('setSecret', response.data.secret.secret);
+         }).then(()=>{
+          axios.post("/generate-otp", {
+            phoneNumber: phoneNumber,
+            secret: context.getters.secret,
+          }).then((otpResponse)=>{
+            console.log('serotp seuriot');
+            console.log(otpResponse);
+            context.commit('setOtp', otpResponse.data.otp);
+            context.commit('setLogin',true);
+         })  
+        
       //Create phone verification program to test if actual phone/email write error
       //Create program to send a generated otp to given phone/email write error
         console.log(response);
@@ -64,10 +82,20 @@ export default new Vuex.Store({
       },
 
       //Verify OTP
-      otpVerify(context, otp){
+      otpVerify(context){
         //check otp against the saved otp-phone number pair
-        context.commit('setOtpVerified', true);
-        
+        let secret = context.getters.secret;
+        let token = context.getters.otp.token;
+        console.log(token);
+        console.log(secret);
+        let verification = twoFactor.verifyToken(secret, token);
+        console.log(verification);
+         if (verification === null){
+          context.commit('setOtpVerified', false);
+         }else{
+          context.commit('setOtpVerified', true);
+         }
+         console.log(context.getters.otpVerified);
       }
 
 

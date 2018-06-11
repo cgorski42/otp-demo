@@ -1,15 +1,13 @@
 <template>
   <div class="column">
     <h1>Userless Demo</h1>
-    <!--   <form v-on:submit.prevent="register"> -->
     <form>
-      <input class="narrow" v-model="phonenumber" placeholder="Phone Number">
+      <input class="narrow" v-model="phoneNumber" placeholder="Phone Number">
       <p></p>
-      <button class="alternate" type="submit" v-on:click.left="phoneVerify">Send an OTP</button>
+      <button class="alternate" type="submit" v-on:click.left.prevent="phoneVerify">Send an OTP</button>
     </form>
     <p></p>
     <footer> <img src="/static/images/hydralisk.jpg"/></footer>
-    <p class="error">{{registerError}}</p>
   </div>
 
 </template>
@@ -21,13 +19,9 @@ export default {
   data(){
     return {
       phoneNumber: '',
-      loggedIn: '',
     }
   },
   computed: {
-        phoneNumber: function() {
-       return this.$store.getters.phoneNumber;
-     },
      loggedIn: function() {
        return this.$store.getters.loggedIn;
      },
@@ -37,7 +31,7 @@ export default {
    },
   methods: {
     phoneVerify: function() {
-       this.$store.dispatch('phoneVerify');
+       this.$store.dispatch('phoneVerify', this.phoneNumber);
      }
   }
   }

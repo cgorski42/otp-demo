@@ -15,7 +15,6 @@
    name: 'AppHeader',
    data () {
      return {
-       phoneNumber: '',
      }
    },
    computed: {
@@ -57,12 +56,6 @@
      text-align: center;
      line-height: 50px;
      color: #666;
- }
- /*Active color*/
- li a.active {
- }
- /*Hover state for top level links*/
- li:hover a {
  }
  .right {
      float: right;

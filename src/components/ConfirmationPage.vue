@@ -6,7 +6,6 @@
     <!--   <form v-on:submit.prevent="register"> -->
     <p></p>
     <footer> <img src="/static/images/Kerrigan.jpg"/></footer>
-    <p class="error">{{registerError}}</p>
   </div>
 
 </template>
