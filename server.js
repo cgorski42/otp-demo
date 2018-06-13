@@ -20,7 +20,7 @@ const twilio = require('twilio');
 var client = new twilio(accountSID, authToken)
 
 var app = express();
-app.get('/authenticate',(req, res) => {
+app.get('/api/authenticate',(req, res) => {
     res.json({
         message: 'Test'
     });
@@ -33,11 +33,11 @@ app.use(express.static('public'));
 
 
 //32 char secret generator
-app.get("/generate-secret", function(request, response) {
+app.get("/api/generate-secret", function(request, response) {
     response.send({ "secret": TwoFactor.generateSecret() });
 });
 //six character token
-app.post("/generate-otp", function(request, response) {
+app.post("/api/generate-otp", function(request, response) {
     console.log('otp post test')
    let otp = TwoFactor.generateToken(request.body.secret);
    console.log(request.body.phoneNumber);
@@ -94,7 +94,7 @@ around as a Bearer token in an authorization header. If the header exists, we sp
 
 /*login (trades auth data for JSON Web Token) assumes database data has a boolean element 2fa that 
 indicates if 2fa is enabled or not (probably uneccasary for our purposes wil defalut to on.)*/
-app.post("/authenticate", function(request, response) {
+app.post("/api/authenticate", function(request, response) {
    //static databaseless user info
     var user = {
         "username": "user",
@@ -116,7 +116,7 @@ app.post("/authenticate", function(request, response) {
     });
 });
 //atuhenticates token, assumes mock user and mock data including a otp (totp) secret. 
-app.post("/verify-totp", function(request, response) {
+app.post("/api/verify-totp", function(request, response) {
     var user = {
         "username": "user",
         "password": "password",

@@ -60,16 +60,16 @@ export default new Vuex.Store({
        
     //Verify Phonenumber //
        phoneVerify(context,phoneNumber) {
-         axios.get("/generate-secret").then((response)=>{
-           console.log("afwsfjakls;df");
-          console.log(response);
+         axios.get("/api/generate-secret").then((response)=>{
+           console.log("Next log should be generated 32 character secret and qr code");
+           console.log(response);
             context.commit('setSecret', response.data.secret.secret);
          }).then(()=>{
-          axios.post("/generate-otp", {
+          axios.post("/api/generate-otp", {
             phoneNumber: phoneNumber,
-            secret: context.getters.secret,
+            secret: context.getters.secret,//How do we test that the secret is being saved properly?
           }).then((otpResponse)=>{
-            console.log('serotp seuriot');
+            console.log('Next log should be the OTP');
             console.log(otpResponse);
             context.commit('setOtp', otpResponse.data.otp);
             context.commit('setLogin',true);
@@ -77,7 +77,7 @@ export default new Vuex.Store({
         
       //Create phone verification program to test if actual phone/email write error
       //Create program to send a generated otp to given phone/email write error
-        console.log(response);
+        //console.log(otpResponse);
       })
       },
 

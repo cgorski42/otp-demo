@@ -11,19 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/authenticate': {
-        target: 'http://localhost:3000',
-        secure: false
-      },
-      '/verify-totp': {
-        target: 'http://localhost:3000',
-        secure: false
-      },
-      '/generate-otp': {
-        target: 'http://localhost:3000',
-        secure: false
-      },
-      '/generate-secret': {
+      '/api': {
         target: 'http://localhost:3000',
         secure: false
       },
