@@ -50,7 +50,6 @@
  /* Create a horizontal list with spacing */
  li {
      display:inline-block;
-     float: left;
      margin-right: 20px;
      height: 50px;
      text-align: center;
